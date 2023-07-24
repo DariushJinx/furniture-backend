@@ -9,11 +9,11 @@ const RoleSchema = Joi.object({
     .error(createHttpError.BadRequest("عنوان وارد شده صحیح نمی باشد")),
   description: Joi.string()
     .min(0)
-    .max(30)
+    .max(100)
     .error(createHttpError.BadRequest("توضیحات وارد شده نقش صحیح نمی باشد")),
   permissions: Joi.array()
     .items(Joi.string().pattern(MongoIDPattern))
-    .error(createHttpError.BadRequest("دسترسی های  وارد شده صحیح نمی باشد")),
+    .error(createHttpError.BadRequest("دسترسی های ارسال شده صحیح نمیباشد")),
 });
 const PermissionSchema = Joi.object({
   name: Joi.string()
@@ -22,8 +22,8 @@ const PermissionSchema = Joi.object({
     .error(createHttpError.BadRequest("نام وارد شده صحیح نمی باشد")),
   description: Joi.string()
     .min(0)
-    .max(30)
-    .error(createHttpError.BadRequest("توضیحات وارد شده نقش صحیح نمی باشد")),
+    .max(100)
+    .error(createHttpError.BadRequest("توضیحات وارد شده دسترسی صحیح نمی باشد")),
 });
 
 const RBACValidation = {
