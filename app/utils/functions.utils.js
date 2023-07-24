@@ -1,5 +1,7 @@
 const userModel = require("../http/models/users.model");
 const JWT = require("jsonwebtoken");
+const path = require("path");
+const fs = require("fs");
 const {
   ACCESS_TOKEN_SECRET_KEY,
   REFRESH_TOKEN_SECRET_KEY,
@@ -83,6 +85,13 @@ function deleteInvalidPropertyInObject(data = {}, blackListFields = []) {
   });
 }
 
+function deleteFileInPublic(fileAddress) {
+  if (fileAddress) {
+    const pathFile = path.join(__dirname, "..", "..", "public", fileAddress);
+    if (fs.existsSync(pathFile)) fs.unlinkSync(pathFile);
+  }
+}
+
 const functions = {
   RandomNumberGenerator,
   signAccessToken,
@@ -90,6 +99,7 @@ const functions = {
   verifyRefreshToken,
   copyObject,
   deleteInvalidPropertyInObject,
+  deleteFileInPublic,
 };
 
 module.exports = functions;
