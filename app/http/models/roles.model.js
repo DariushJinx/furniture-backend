@@ -17,11 +17,11 @@ const roleSchema = new mongoose.Schema(
   }
 );
 
-roleSchema.virtual("permissions_details",{
-    ref : "permissions",
-    localField : "_id",
-    foreignField : "permissions"
-})
+roleSchema.virtual("permissions_details", {
+  ref: "permissions",
+  localField: "_id",
+  foreignField: "permissions",
+});
 
 const roleModel = mongoose.model("roles", roleSchema);
 
