@@ -4,9 +4,6 @@ const morgan = require("morgan");
 const path = require("path");
 const swaggerUI = require("swagger-ui-express");
 const swaggerJSDoc = require("swagger-jsdoc");
-const cookieParser = require("cookie-parser");
-const { COOKIE_PARSER_SECRET_KEY } = require("./utils/constans.utils");
-const session = require("express-session");
 const AllRouter = require("./routers/main.routes");
 const { notFound, Errors } = require("./utils/errorHandler.utils");
 
@@ -18,7 +15,6 @@ module.exports = class Application {
     this.#DB_URI = DB_URI;
     this.#PORT = PORT;
     this.configApplication();
-    this.initClientSession();
     this.initRedis();
     this.connectToMongoDB();
     this.createServer();
@@ -66,20 +62,7 @@ module.exports = class Application {
       )
     );
   }
-  initClientSession() {
-    this.#app.use(cookieParser(COOKIE_PARSER_SECRET_KEY));
-    this.#app.use(
-      session({
-        secret: COOKIE_PARSER_SECRET_KEY,
-        resave: true,
-        saveUninitialized: true,
-        cookie: {
-          secure: true,
-          signed: true,
-        },
-      })
-    );
-  }
+
   initRedis() {
     require("./utils/initRedis.utils");
   }
