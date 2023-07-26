@@ -9,6 +9,7 @@
  *                  -   text
  *                  -   short_text
  *                  -   tags
+ *                  -   category
  *                  -   image
  *              properties :
  *                  title :
