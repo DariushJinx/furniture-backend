@@ -12,7 +12,7 @@ const blogSchema = new mongoose.Schema(
     category: {
       type: mongoose.Types.ObjectId,
       ref: "categories",
-      required: false,
+      required: true,
     },
     comments: { type: [CommentSchema], default: [] },
     likes: { type: [mongoose.Types.ObjectId], ref: "users", default: [] },
