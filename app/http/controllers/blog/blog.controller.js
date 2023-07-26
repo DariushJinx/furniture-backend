@@ -27,17 +27,17 @@ class Blog extends Controller {
         {
           $unwind: "$author",
         },
-        // {
-        //   $lookup: {
-        //     from: "categories",
-        //     foreignField: "_id",
-        //     localField: "category",
-        //     as: "category",
-        //   },
-        // },
-        // {
-        //   $unwind: "$category",
-        // },
+        {
+          $lookup: {
+            from: "categories",
+            foreignField: "_id",
+            localField: "category",
+            as: "category",
+          },
+        },
+        {
+          $unwind: "$category",
+        },
         {
           $project: {
             "author.__v": 0,
@@ -161,6 +161,7 @@ class Blog extends Controller {
         },
       });
     } catch (err) {
+      deleteFileInPublic(req.body.image);
       next(err);
     }
   }
@@ -175,7 +176,7 @@ class Blog extends Controller {
     ]);
 
     if (!blog) throw createHttpError.NotFound("مقاله ای یافت نشد");
-    // delete blog.category.children;
+    delete blog.category.children;
     return blog;
   }
 }
