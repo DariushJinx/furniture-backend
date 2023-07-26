@@ -92,6 +92,33 @@ function deleteFileInPublic(fileAddress) {
   }
 }
 
+function ListOfImagesFromRequest(files, fileUploadPath) {
+  if (files?.length > 0) {
+    return files
+      .map((file) => path.join(fileUploadPath, file.filename))
+      .map((item) => item.replace(/\\/g, "/"));
+  } else {
+    return [];
+  }
+}
+
+function setFeatures(body) {
+  const { width, length, height, weight, colors } = body;
+  let features = {};
+  features.colors = colors;
+  if (!isNaN(+width) || !isNaN(+length) || !isNaN(+height) || !isNaN(+weight)) {
+    if (!width) features.width = 0;
+    else features.width = +width;
+    if (!length) features.length = 0;
+    else features.length = +length;
+    if (!height) features.height = 0;
+    else features.height = +height;
+    if (!weight) features.weight = 0;
+    else features.weight = +weight;
+  }
+  return features;
+}
+
 const functions = {
   RandomNumberGenerator,
   signAccessToken,
@@ -100,6 +127,8 @@ const functions = {
   copyObject,
   deleteInvalidPropertyInObject,
   deleteFileInPublic,
+  ListOfImagesFromRequest,
+  setFeatures,
 };
 
 module.exports = functions;
