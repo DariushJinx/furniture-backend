@@ -1,3 +1,5 @@
+const { createHandler } = require("graphql-http/lib/use/express");
+const QLSchema = require("../graphql/index.graphql");
 const {
   verifyAccessToken,
 } = require("../http/middlewares/verifyAccessToken.middleware");
@@ -10,5 +12,5 @@ const AllRouter = require("express").Router();
 AllRouter.use("/", indexRoutes);
 AllRouter.use("/user", authRoutes);
 AllRouter.use("/admin", verifyAccessToken, adminRoutes);
-
+AllRouter.all("/graphql", createHandler({ schema: QLSchema }));
 module.exports = AllRouter;
