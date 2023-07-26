@@ -5,6 +5,6 @@ const {
 
 const indexRoutes = require("express").Router();
 
-indexRoutes.get("/", verifyAccessToken, HomeController.indexPage);
+indexRoutes.get("/", HomeController.indexPage);
 
 module.exports = indexRoutes;
