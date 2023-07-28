@@ -103,7 +103,7 @@ function ListOfImagesFromRequest(files, fileUploadPath) {
 }
 
 function setFeatures(body) {
-  const { width, length, height, weight, colors } = body;
+  const { width, length, height, weight, colors , madeIn } = body;
   let features = {};
   features.colors = colors;
   if (!isNaN(+width) || !isNaN(+length) || !isNaN(+height) || !isNaN(+weight)) {
@@ -115,8 +115,87 @@ function setFeatures(body) {
     else features.height = +height;
     if (!weight) features.weight = 0;
     else features.weight = +weight;
+    
   }
+  features.madeIn = madeIn
   return features;
+}
+
+async function getBasketOfUser(userID, discount = {}) {
+  const userDetail = await userModel.aggregate([
+    {
+      $match: { _id: userID },
+    },
+    {
+      $project: { basket: 1 },
+    },
+    {
+      $lookup: {
+        from: "products",
+        localField: "basket.products.productID",
+        foreignField: "_id",
+        as: "productDetail",
+      },
+    },
+    {
+      $addFields: {
+        productDetail: {
+          $function: {
+            body: function (productDetail, products) {
+              return productDetail.map(function (product) {
+                const count = products.find(
+                  (item) => item.productID.valueOf() == product._id.valueOf()
+                ).count;
+                const totalPrice = count * product.price;
+                return {
+                  ...product,
+                  basketCount: count,
+                  totalPrice,
+                  finalPrice:
+                    totalPrice - (product.discount / 100) * totalPrice,
+                };
+              });
+            },
+            args: ["$productDetail", "$basket.products"],
+            lang: "js",
+          },
+        },
+        payDetail: {
+          $function: {
+            body: function (productDetail, products) {
+              const productAmount = productDetail.reduce(function (
+                total,
+                product
+              ) {
+                const count = products.find(
+                  (item) => item.productID.valueOf() == product._id.valueOf()
+                ).count;
+                const totalPrice = count * product.price;
+                return (
+                  total + (totalPrice - (product.discount / 100) * totalPrice)
+                );
+              },
+              0);
+              const productIDs = productDetail.map((product) =>
+                product._id.valueOf()
+              );
+              return {
+                productAmount,
+                paymentAmount: productAmount,
+                productIDs,
+              };
+            },
+            args: ["$productDetail", "$basket.products"],
+            lang: "js",
+          },
+        },
+      },
+    },
+    {
+      $project: { basket: 0 },
+    },
+  ]);
+  return copyObject(userDetail);
 }
 
 const functions = {
@@ -129,6 +208,7 @@ const functions = {
   deleteFileInPublic,
   ListOfImagesFromRequest,
   setFeatures,
+  getBasketOfUser,
 };
 
 module.exports = functions;
