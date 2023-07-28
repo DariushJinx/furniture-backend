@@ -78,6 +78,9 @@
  *                      type : string
  *                      description : the weight of product
  *                      example: 0
+ *                  madeIn :
+ *                      type : string
+ *                      description : the madeIn of product
  *                  type :
  *                      type : string
  *                      description : the type of product
