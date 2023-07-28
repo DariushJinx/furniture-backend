@@ -29,10 +29,19 @@ const AnyType = new GraphQLScalarType({
   parseLiteral: parseLiteral,
 });
 
+const ResponseType = new GraphQLObjectType({
+  name: "ResponseType",
+  fields: {
+    statusCode: { type: GraphQLString },
+    data: { type: AnyType },
+  },
+});
+
 const public = {
   UserType,
   PublicCategoryType,
   AnyType,
+  ResponseType
 };
 
 module.exports = public;
