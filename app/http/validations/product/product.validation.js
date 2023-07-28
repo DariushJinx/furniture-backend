@@ -53,6 +53,9 @@ const CreateProductValidation = Joi.object({
   length: Joi.number()
     .allow(null, 0, "0")
     .error(createHttpError.BadRequest("طول وارد شده صحیح نمی باشد")),
+  madeIn: Joi.string()
+    .allow(null, 0, "0")
+    .error(createHttpError.BadRequest("سازنده وارد شده صحیح نمی باشد")),
   type: Joi.string().regex(/(virtual|physical)/i),
   filename: Joi.string()
     .regex(/(\.png|\.jpg|\.webp|\.jpeg|\.gif)$/)
