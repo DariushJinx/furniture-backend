@@ -1,4 +1,7 @@
 const { Kind } = require("graphql");
+const blogModel = require("../http/models/blog.model");
+const createHttpError = require("http-errors");
+const ProductModel = require("../http/models/product.model");
 
 function toObject(value) {
   if (typeof value === "object") {
@@ -22,9 +25,23 @@ function parseLiteral(valueNode) {
   }
 }
 
+async function checkExistBlog(id) {
+  const blog = await blogModel.findById(id);
+  if (!blog) throw createHttpError.NotFound("مقاله ای با این شناسه یافت نشد");
+  return blog;
+}
+
+async function checkExistProduct(id) {
+  const product = await ProductModel.findById(id);
+  if (!product) throw createHttpError.NotFound("محصولی با این شناسه یافت نشد");
+  return product;
+}
+
 const Utils = {
   toObject,
   parseLiteral,
+  checkExistBlog,
+  checkExistProduct,
 };
 
 module.exports = Utils;
