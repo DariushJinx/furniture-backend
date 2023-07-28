@@ -29,9 +29,8 @@ const userSchema = new mongoose.Schema(
     birthday: { type: String },
     token: { type: String, default: "" },
     refreshToken: { type: String, default: "" },
-    Role: { type: String, default: "USER" },
+    Role: { type: String, enum: ["ADMIN", "USER"], default: "USER" },
     Products: { type: [mongoose.Types.ObjectId], ref: "products", default: [] },
-    Blogs: { type: [mongoose.Types.ObjectId], ref: "blogs", default: [] },
     basket: { type: BasketSchema },
   },
   {
@@ -41,6 +40,8 @@ const userSchema = new mongoose.Schema(
     },
   }
 );
+
+userSchema.count = 1;
 
 userSchema.index({
   first_name: "text",
